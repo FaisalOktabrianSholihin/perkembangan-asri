@@ -4,15 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Perkembangan ASRI per Divisi</title>
+<link rel="icon" href="{{ asset('img/logo.png') }}">
 <link rel="stylesheet" href="{{ asset('css/asri.css') }}">
 </head>
 <body>
 <nav class="dots" id="dots"></nav>
-<header class="top"><b>ASRI</b><span>Paparan Perkembangan Implementasi · Direksi &amp; Komisaris Utama</span></header>
+<header class="top"><img src="{{ asset('img/logo.png') }}" alt="Mitratani Dua Tujuh"><b>ASRI</b><span>Paparan Perkembangan Implementasi · Direksi &amp; Komisaris Utama</span><a class="btn" href="{{ route('laporan') }}" target="_blank">⎙ Cetak Laporan PDF</a></header>
 
 <main id="deck">
 <section class="slide hero" data-title="Ringkasan">
+  <div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
+    <div class="hlogo"><img src="{{ asset('img/logo.png') }}" alt="Mitratani Dua Tujuh"></div>
     <p class="eyebrow">Paparan Manajemen</p>
     <h1>Perkembangan Implementasi <em>ASRI</em><br>di Seluruh Divisi</h1>
     <p class="lead">Status penggunaan {{ $total['total'] }} modul pada {{ $divisi->count() }} divisi/bagian.</p>
@@ -101,7 +104,7 @@
   </div>
 </div>
 
-<script>window.ASRI = @json(['divisi' => $divisi, 'modules' => $modules]);</script>
+<script>window.ASRI = @json(['divisi' => $divisi, 'modules' => $modules, 'report' => route('laporan')]);</script>
 <script src="{{ asset('js/asri.js') }}"></script>
 </body>
 </html>

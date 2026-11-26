@@ -20,7 +20,7 @@
     const d = D.divisi.find(x => x.name === name), menus = D.modules[name] || [];
     $('#mbody').innerHTML = `<p class="eyebrow">Detail Divisi</p><h2>${esc(name)}</h2>
       <p class="sub">${d.total} modul · <b class="g">${d.used} digunakan</b> · <b class="r">${d.unused} tidak digunakan</b>${d.update ? ` · <b class="a">${d.update} butuh update</b>` : ''} · ${pf(d.pct)}%</p>
-      <div class="menus">${menus.map(m => {
+      <a class="btn sm" target="_blank" href="${D.report}?divisi=${encodeURIComponent(name)}&lengkap=1">⎙ Cetak divisi ini</a><div class="menus">${menus.map(m => {
         const u = m.items.filter(i => i[1] === 'Digunakan').length, p = u / m.items.length * 100;
         return `<div class="menu"><div class="mh"><b>${esc(m.menu)}</b><span>${u}/${m.items.length} digunakan</span></div>
           <div class="mini"><i style="width:${p}%"></i></div>
@@ -39,4 +39,27 @@
     if (['ArrowRight', 'ArrowDown', 'PageDown'].includes(e.key) && slides[i + 1]) { e.preventDefault(); slides[i + 1].scrollIntoView({ behavior: 'smooth' }); }
     if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key) && slides[i - 1]) { e.preventDefault(); slides[i - 1].scrollIntoView({ behavior: 'smooth' }); }
   });
+  // ===== Animasi =====
+  const sel = '.wrap > *, .kpi, .row, .card, .insights article, .steps li';
+  slides.forEach(s => s.querySelectorAll(sel).forEach((el, i) => { el.classList.add('rv'); el.style.setProperty('--d', Math.min(i * .06, .9) + 's'); }));
+  const count = (el, to, dec, suf, ms = 1400) => {
+    const t0 = performance.now(), tick = t => { const k = Math.min((t - t0) / ms, 1), v = to * (1 - Math.pow(1 - k, 3));
+      el.textContent = v.toLocaleString('id-ID', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + suf; if (k < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  };
+  const reveal = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.querySelectorAll('.rv').forEach(x => x.classList.add('in'));
+    if (e.target.classList.contains('hero') && !e.target.dataset.done) {
+      e.target.dataset.done = 1;
+      e.target.querySelectorAll('.kpi b, .gauge b').forEach(b => {
+        const raw = b.textContent, v = parseFloat(raw.replace(/\./g, '').replace(',', '.')), dec = (raw.split(',')[1] || '').replace('%', '').length;
+        count(b, v, dec, raw.includes('%') ? '%' : '');
+      });
+      const g = e.target.querySelector('.gauge'), p = parseFloat(g.style.getPropertyValue('--p')), t0 = performance.now();
+      const f = t => { const k = Math.min((t - t0) / 1600, 1); g.style.setProperty('--p', p * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); };
+      g.style.setProperty('--p', 0); requestAnimationFrame(f);
+    }
+  }), { threshold: .3 });
+  slides.forEach(s => reveal.observe(s));
 })();

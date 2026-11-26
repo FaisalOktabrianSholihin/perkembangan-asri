@@ -7,3 +7,5 @@
 Tanpa dependensi CDN, aman dipresentasikan tanpa internet.
 Data: `resources/data/asri.json`. Jika Excel berubah: `python scripts/excel_to_json.py ASRI.xlsx`
 Navigasi: panah (kiri/kanan/atas/bawah), titik di kanan, klik divisi untuk detail, Esc menutup.
+
+Laporan PDF: tombol 'Cetak Laporan PDF' (route /laporan). Tambahkan ?divisi=Nama untuk satu divisi, ?lengkap=1 untuk daftar modul tidak digunakan. Pilih 'Save as PDF' pada dialog cetak.

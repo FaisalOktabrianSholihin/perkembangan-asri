@@ -4,3 +4,4 @@ use App\Http\Controllers\AsriController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AsriController::class, 'index'])->name('asri');
+Route::get('/laporan', [AsriController::class, 'laporan'])->name('laporan');
